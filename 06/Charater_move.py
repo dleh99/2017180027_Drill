@@ -44,7 +44,12 @@ def move_circle():
     y = 90
     r = (600 - 90)/2
 
-    for n in range(0,360+1):
+    for n in range(270,360+1):
+        x = 400 + math.cos(n/360 * 2 * math.pi) * r
+        y = 90  + r + math.sin(n/360 * 2 * math.pi) * r
+        draw_charater(x,y)
+        
+    for n in range(0,270 + 1):
         x = 400 + math.cos(n/360 * 2 * math.pi) * r
         y = 90  + r + math.sin(n/360 * 2 * math.pi) * r
         draw_charater(x,y)
