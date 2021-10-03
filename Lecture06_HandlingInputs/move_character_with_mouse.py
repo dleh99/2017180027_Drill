@@ -2,14 +2,31 @@ from pico2d import *
 
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
-def Move_Charater(CharX, Chary, mx, my):
-    pass
+def Move_Charater(CharX, Chary, dmx, dmy):
+    global isLeft
+    global disX, disY
+    if CharX > dmx:
+        isLeft = True
+    else:
+        isLeft = False
+
+    if CharX > dmx:
+        disX = -1
+    else:
+        disX = 1
+
+    if Chary > dmy:
+        disY = -1
+    else:
+        disY = 1
+
+
 
 def handle_events():
     global running
     global x, y
-    global isLeft
     global Chx, Chy
+    global mx, my
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -17,14 +34,11 @@ def handle_events():
         elif event.type == SDL_MOUSEMOTION:
             x, y = event.x + 25, KPU_HEIGHT - 27 - event.y
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            Chx, Chy = event.x, KPU_HEIGHT - event.y - 1
-        elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                running = False
-            elif event.key == SDLK_LEFT:
-                isLeft = True
-            elif event.key == SDLK_RIGHT:
-                isLeft = False
+            mx = event.x
+            my = KPU_HEIGHT - event.y - 1
+            Move_Charater(Chx, Chy, mx, my)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            running = False
 
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
@@ -39,7 +53,10 @@ running = True
 isLeft = False
 Chx, Chy = KPU_WIDTH // 2, KPU_HEIGHT // 2
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
+disX, disY = 0, 0
+mx, my = 0, 0
 frame = 0
+speed = 100
 # hide_cursor()
 
 while running:
@@ -51,6 +68,14 @@ while running:
         character.clip_draw(frame * 100, 100 * 1, 100, 100, Chx, Chy)
     mouse.draw(x, y)
     hide_cursor()
+
+    Chx += disX * abs(Chx - mx) / speed
+    Chy += disY * abs(Chy - my) / speed
+
+    if Chx == mx:
+        disX = 0
+    if Chy == my:
+        disY = 0
 
     update_canvas()
     frame = (frame + 1) % 8
