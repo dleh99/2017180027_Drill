@@ -70,15 +70,18 @@ def draw_line(p1, p2):
     # draw_big_point(p2)
     x1, y1 = p1[0], p1[1]
     x2, y2 = p2[0], p2[1]
-    r = math.sqrt((x2-x1)**2 + (y2-y1)**2)
     a = 7
     b = 10
     p = 100
+    Tr = 5
+    r = 3
+    d = 5
 
-    for i in range(0, 650+1, 2):
-        t = i * math.pi / 360
-        x = math.cos(a * t) - math.cos(b * t) ** 3
-        y = math.sin(a * t) - math.sin(b * t) ** 3
+
+    for i in range(0, 1650+1, 10):
+        t = math.radians(i)
+        x = ((Tr - r) * math.cos(t) + d * math.cos((Tr - r) * t / r)) * 10
+        y = ((Tr - r) * math.sin(t) - d * math.sin((Tr - r) * t / r)) * 10
         draw_point((x, y))
 
     draw_point(p2)
