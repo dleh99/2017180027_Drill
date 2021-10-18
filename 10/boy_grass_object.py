@@ -69,7 +69,7 @@ num = random.randint(1, 20)
 grass = Grass()
 team = [Boy() for i in range(1, 11 + 1)]
 Small_Balls = [Small_Ball() for i in range(1, num)]
-Big_Balls = [Big_Ball() for i in range(num, 20 +1)]
+Big_Balls = [Big_Ball() for i in range(num, 20 + 1)]
 
 running = True
 
