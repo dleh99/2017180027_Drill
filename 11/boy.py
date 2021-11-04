@@ -92,18 +92,18 @@ class DashState:
 
     def enter(boy, event):
         if event == SHIFT_DOWN and boy.dir == 1:
-            boy.accle = 2
+            boy.accele = 2
         elif event == SHIFT_DOWN and boy.dir == -1:
-            boy.accle = -2
+            boy.accele = -2
         boy.timer = 1000
 
     def exit(boy, event):
-        boy.accle = 0
+        boy.accele = 0
 
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
-        boy.x += boy.accle
+        boy.x += boy.accele
         boy.x = clamp(25, boy.x, 1500 - 25)
         if boy.timer == 0:
             boy.add_event(SHIFT_UP)
@@ -143,7 +143,7 @@ class Boy:
         self.image = load_image('animation_sheet.png')
         self.dir = 1
         self.velocity = 0
-        self.accle = 0
+        self.accele = 0
         self.frame = 0
         self.timer = 0
         self.event_que = []
@@ -170,7 +170,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        debug_print('Dir:' + str(self.dir) + '  Accle:' + str(self.accle))
+        debug_print('Dir:' + str(self.dir) + '  Accle:' + str(self.accele))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
