@@ -5,7 +5,7 @@ import random
 import game_world
 
 # Bird Run Speed
-PIXEL_PER_Cent = (100.0 / 20)
+PIXEL_PER_Cent = (10.0 / 0.2)
 PIXEL_PER_METER = (100.0 / 0.2)  # 100 pixel 20 cm < 참새 평균 신장
 RUN_SPEED_KMPH = 20.0  # Km / Hour = 참새 속력 시속 20~40km/h
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
