@@ -16,6 +16,7 @@ name = "MainState"
 boy = None
 grass = None
 balls = []
+crush_balls = []
 brick = None
 
 def collide(a, b):
@@ -75,10 +76,12 @@ def handle_events():
 
 
 def update():
+    global crush_balls, balls
+
     for game_object in game_world.all_objects():
         game_object.update()
 
-    for ball in balls.copy():
+    for ball in balls:
         if collide(ball, grass):
             ball.stop()
         if collide(ball, boy):
@@ -87,6 +90,14 @@ def update():
         if collide(ball, brick):
             ball.stop()
             ball.move_speed = brick.speed
+
+    # for ball in balls:
+    #     for c_ball in crush_balls:
+    #         if collide(ball, c_ball):
+    #             ball.stop()
+    #             ball.move_speed = brick.speed
+    #             balls.remove(ball)
+    #             crush_balls.append(ball)
 
 
 def draw():
