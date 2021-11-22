@@ -5,6 +5,7 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import server
 
 from boy import Boy
 from grass import Grass
@@ -13,48 +14,24 @@ from brick import Brick
 
 name = "MainState"
 
-boy = None
-grass = None
-balls = []
-crush_balls = []
-brick = None
-
-def collide(a, b):
-    # fill here
-    left_a, bottom_a, right_a, top_a = a.get_bb()
-    left_b, bottom_b, right_b, top_b = b.get_bb()
-
-    if left_a > right_b: return False
-    if right_a < left_b: return False
-    if top_a < bottom_b: return False
-    if bottom_a > top_b: return False
-
-    return True
-
-
-
 
 def enter():
-    global boy
-    boy = Boy()
-    game_world.add_object(boy, 1)
+    server.boy = Boy()
+    game_world.add_object(server.boy, 1)
 
-    global grass
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    server.grass = Grass()
+    game_world.add_object(server.grass, 0)
 
-    global balls
-    balls = [Ball() for i in range(200)]
-    game_world.add_objects(balls, 1)
+    server.balls = [Ball() for i in range(200)]
+    game_world.add_objects(server.balls, 1)
 
-    global brick
-    brick = Brick()
-    game_world.add_object(brick, 1)
-
+    server.brick = Brick()
+    game_world.add_object(server.brick, 1)
 
 
 def exit():
     game_world.clear()
+
 
 def pause():
     pass
@@ -72,33 +49,18 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
         else:
-            boy.handle_event(event)
+            server.boy.handle_event(event)
 
 
 def update():
-    global crush_balls, balls
-
     for game_object in game_world.all_objects():
         game_object.update()
-
-    for ball in balls:
-        if collide(ball, grass):
-            ball.stop()
-        if collide(ball, boy):
-            balls.remove(ball)
-            game_world.remove_object(ball)
-        if collide(ball, brick):
-            ball.stop()
-            ball.move_speed = brick.speed
-
-    # for ball in balls:
-    #     for c_ball in crush_balls:
-    #         if collide(ball, c_ball):
-    #             ball.stop()
-    #             ball.move_speed = brick.speed
-    #             balls.remove(ball)
-    #             crush_balls.append(ball)
-
+    
+    # ball과 잔디의 충돌을 체크해야하는데, 어디서?
+    # > 잔디가 충돌을 체크하도록(상황에 따라 다르긴 함
+    # ball과 소년의 출돌 > 소년이 체크
+    # ball과 brick의 처리
+    
 
 def draw():
     clear_canvas()

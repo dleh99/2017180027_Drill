@@ -3,6 +3,8 @@ from pico2d import *
 from ball import Ball
 
 import game_world
+import server
+import collision
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -156,6 +158,13 @@ class Boy:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+
+        # 소년과 balls가 만나면 ball을 없앤다.
+        for ball in server.balls.copy():
+            if collision.collide(ball, self):
+                # 볼을 없앤다. > world에서도, server.balls에서도
+                game_world.remove_object(ball)
+                server.balls.remove(ball)
 
 
     def draw(self):

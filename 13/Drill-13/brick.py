@@ -4,6 +4,8 @@ from pico2d import *
 
 import game_framework
 import game_world
+import server
+import collision
 
 
 class Brick:
@@ -11,6 +13,7 @@ class Brick:
         self.image = load_image('brick180x40.png')
         self.x, self.y = 100, 200
         self.speed = 200 # 200 pixel per second
+        self.child_balls = []
 
     def update(self):
         self.x += game_framework.frame_time * self.speed
@@ -21,9 +24,18 @@ class Brick:
             self.x = 0
             self.speed = -self.speed
 
+        for ball in server.balls.copy():
+            if collision.collide(ball, self):
+                self.attach_ball(ball)
+                server.balls.remove(ball)
+
     def draw(self):
         self.image.draw(self.x, self.y)
         draw_rectangle(*self.get_bb())
+
+    def attach_ball(self, ball):
+        self.child_balls.append(ball)
+        ball.set_parent(self) # 볼에 대해서 부모를 정한다.
 
     def get_bb(self):
         return self.x-90, self.y-20, self.x+90, self.y+20
