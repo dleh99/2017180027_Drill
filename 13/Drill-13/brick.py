@@ -28,6 +28,19 @@ class Brick:
             if collision.collide(ball, self):
                 self.attach_ball(ball)
                 server.balls.remove(ball)
+            else:
+                for c_ball in self.child_balls:
+                    if collision.collide(ball, c_ball):
+                        self.attach_ball(ball)
+                        server.balls.remove(ball)
+                        break
+
+        if len(self.child_balls) >= 10:
+            for ball in self.child_balls:
+                ball.set_parent(None)
+                server.balls.append(ball)
+                game_world.remove_object(server.brick)
+
 
     def draw(self):
         self.image.draw(self.x, self.y)

@@ -34,7 +34,10 @@ class Ball:
 
     def set_parent(self, brick):
         self.parent = brick
-        self.rx, self.ry = self.x - brick.x, self.y - brick.y
+        if brick is not None:
+            self.rx, self.ry = self.x - brick.x, self.y - brick.y
+        else:
+            self.rx, self.ry = 0, 0
 
     def stop(self):
         self.fall_speed = 0
