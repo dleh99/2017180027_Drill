@@ -5,15 +5,13 @@ from ball import Ball
 import game_world
 
 # Boy Run Speed
-# fill expressions correctly
-PIXEL_PER_METER = (10.0 / 0.3)
-RUN_SPEED_KMPH = 20.0
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 # Boy Action Speed
-# fill expressions correctly
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
@@ -83,6 +81,7 @@ class RunState:
             boy.fire_ball()
 
     def do(boy):
+        #boy.frame = (boy.frame + 1) % 8
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         boy.x += boy.velocity * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1600 - 25)
@@ -136,17 +135,21 @@ class Boy:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
 
+    def get_bb(self):
+        # fill here
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+
 
     def fire_ball(self):
-        # ball = Ball(self.x, self.y, self.dir*3)
-        # game_world.add_object(ball, 1)
-        print('들어감\n')
+        ball = Ball(self.x, self.y, self.dir * RUN_SPEED_PPS * 10)
+        game_world.add_object(ball, 1)
 
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def update(self):
+
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -154,9 +157,12 @@ class Boy:
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
+
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        draw_rectangle(*self.get_bb())
+        debug_print('Velocity :' + str(self.velocity) + '  Dir:' + str(self.dir) + ' Frame Time:' + str(game_framework.frame_time))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
